@@ -1,0 +1,144 @@
+
+class Queue():
+    def __init__(self):
+        self.items = []
+        
+    def isEmpty(self):
+        return len(self.items) == 0
+    def enqueue(self, value):
+        self.items.append(value)
+    def dequeue(self):
+        return self.items.pop(0)
+    def size(self):
+        return len(self.items)
+
+#we have to create cars class
+class cars():
+    def __init__(self, no):
+        self.item = no
+        self.moves = 0 
+    def l_no(self):                              #l_no means licence number
+        return self.item                    
+        
+    def begin(self):
+        self.moves = self.moves + 1 
+          
+    def move(self):
+        return self.moves + 1
+
+
+
+
+
+
+
+    
+#queues that we want
+park = Queue()   
+departs = Queue()  
+checking = []       
+
+
+print("Arrivel or depature : a l_no  or d l_no") 
+ #loop that use                                                                             
+while True:
+    x = raw_input("\nArrivel or departure :")
+    x = x.lower()        
+
+#s is show the cars in park    
+    if x == "s":
+        r = park.size()
+        print ("cars in parking loft")
+        for b in range (0, r):            
+            print park.items[b].l_no(), park.items[b].moves
+        print ("cars in checking queue")
+        for c in checking:
+            print c.l_no()
+    
+             
+    elif x[:2] == "a " and x[2] != " ":                                 
+        print "\nAyoubowan!"                                                        
+        car = cars(x[2:])
+        state = True
+
+         
+        for i in park.items:
+            if car.item == i.item:
+                print "car already in parking loft\n recheck License No."
+                state = False
+                break
+            else:
+                pass
+
+           
+        for i in checking:
+            if car.item == i.item:
+                print "car is  in the checking queue\n recheck License No."
+                state = False
+                break
+            else:
+                pass
+
+           
+        if state == True:
+            if park.size() == 10:                             
+                print "loft is occupied!! \n wait in line "
+                checking.append(car)
+                
+            
+            else:                                               
+                print " enter to the loft!"       
+                park.enqueue(car)                             
+                                                                
+    
+    elif x[:2] == "d " and x[2] != " ":             
+        print "\nayoubowan!come again!\n now enter the car in checking list or if there is no car in checkiing list parking loft is available"                          
+        length = park.size()
+        s1 = False
+        s2 = False
+
+        
+        for i in park.items:
+            if i.l_no() == x[2:]:
+                s1 = True
+                break
+            else:
+                pass
+           
+        if s1 == False:
+            for i in checking:
+                if i.l_no() == x[2:]:
+                    s2 = True
+                    break
+                else:
+                    pass
+            
+        if s1 == True:
+            while park.size() != 0:
+                k = park.dequeue()
+                if (k.l_no() != x[2:]):
+                    k.begin()
+                    departs.enqueue(k)
+                else:
+                    print (k.l_no() + "  moved " + str(k.move()) + "  in the park")
+            while not departs.size() == 0:
+                    park.enqueue(departs.dequeue())
+        
+        elif s2 == True:
+            for i in checking:
+                if i.l_no() == x[2:]:
+                   print (i.l_no() + "  moved 0")
+                   checking.remove(i)
+                
+        else:
+            print("recheck l_no!!")
+           
+        if park.size() < 10:                              
+            if checking != []:                               
+                print "now you can enter another car!"   
+                k = checking.pop(0)
+                park.enqueue(k)
+    
+    
+    else:
+        print "Invalid"
